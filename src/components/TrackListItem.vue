@@ -173,8 +173,9 @@ export default {
     },
     trackClass() {
       let trackClass = [this.type];
-      if (!this.playable && this.showUnavailableSongInGreyStyle)
-        trackClass.push('disable');
+      // 任何歌曲都不禁用
+      // if (!this.playable && this.showUnavailableSongInGreyStyle)
+      // trackClass.push('disable');
       if (this.isPlaying && this.highlightPlayingTrack)
         trackClass.push('playing');
       if (this.focus) trackClass.push('focus');

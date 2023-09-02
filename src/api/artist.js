@@ -21,6 +21,25 @@ export function getArtist(id) {
 }
 
 /**
+ * 获取歌手全部单曲
+ * 说明 : 调用此接口 , 传入歌手 id, 可获得歌手全部歌曲
+ * @param {number} id - 歌手 id, 可由搜索接口获得
+ */
+export function getAllSongs(id) {
+  return request({
+    url: '/artist/songs',
+    method: 'get',
+    params: {
+      id,
+      timestamp: new Date().getTime(),
+    },
+  }).then(data => {
+    console.log(data);
+    return mapTrackPlayableStatus(data.songs);
+  });
+}
+
+/**
  * 获取歌手专辑
  * 说明 : 调用此接口 , 传入歌手 id, 可获得歌手专辑内容
  * - id: 歌手 id
@@ -103,5 +122,17 @@ export function similarArtists(id) {
     url: '/simi/artist',
     method: 'post',
     params: { id },
+  });
+}
+
+/**
+ * 查找音乐
+ * @param {*} query
+ */
+export function searchMusic(query) {
+  return request({
+    url: '/a/hifini/music',
+    method: 'get',
+    params: { query },
   });
 }

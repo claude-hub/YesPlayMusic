@@ -1,6 +1,7 @@
 import { getAlbum } from '@/api/album';
 import { getArtist } from '@/api/artist';
 import { trackScrobble, trackUpdateNowPlaying } from '@/api/lastfm';
+import { searchMusic } from '@/api/artist';
 import { fmTrash, personalFM } from '@/api/others';
 import { getPlaylistDetail, intelligencePlaylist } from '@/api/playlist';
 import { getLyric, getMP3, getTrackDetail, scrobble } from '@/api/track';
@@ -517,11 +518,21 @@ export default class {
     isCacheNextTrack,
     ifUnplayableThen = UNPLAYABLE_CONDITION.PLAY_NEXT_TRACK
   ) {
-    return this._getAudioSource(track).then(source => {
-      if (source) {
+    return this._getAudioSource(track).then(async source => {
+      let sourceUrl = source;
+      if (!source) {
+        try {
+          const { data } = await searchMusic(track.name);
+          sourceUrl = data;
+        } catch {
+          store.dispatch('showToast', `无法播放 ${track.name}`);
+        }
+      }
+
+      if (sourceUrl) {
         let replaced = false;
         if (track.id === this.currentTrackID) {
-          this._playAudioSource(source, autoplay);
+          this._playAudioSource(sourceUrl, autoplay);
           replaced = true;
         }
         if (isCacheNextTrack) {

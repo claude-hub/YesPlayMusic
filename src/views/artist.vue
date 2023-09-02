@@ -104,7 +104,7 @@
     <div id="popularTracks" class="popular-tracks">
       <div class="section-title">{{ $t('artist.popularSongs') }}</div>
       <TrackList
-        :tracks="popularTracks.slice(0, showMorePopTracks ? 24 : 12)"
+        :tracks="popularTracks.slice(0, showMorePopTracks ? undefined : 12)"
         :type="'tracklist'"
       />
 
@@ -180,6 +180,7 @@
 import { mapMutations, mapActions, mapState } from 'vuex';
 import {
   getArtist,
+  getAllSongs,
   getArtistAlbum,
   artistMv,
   followAArtist,
@@ -278,8 +279,10 @@ export default {
       this.$parent.$refs.main.scrollTo({ top: 0 });
       getArtist(id).then(data => {
         this.artist = data.artist;
-        this.popularTracks = data.hotSongs;
         if (next !== undefined) next();
+      });
+      getAllSongs(id).then(data => {
+        this.popularTracks = data;
         NProgress.done();
         this.show = true;
       });
