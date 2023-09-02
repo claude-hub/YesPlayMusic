@@ -34,7 +34,6 @@ export function getAllSongs(id) {
       timestamp: new Date().getTime(),
     },
   }).then(data => {
-    console.log(data);
     return mapTrackPlayableStatus(data.songs);
   });
 }
